@@ -1,5 +1,3 @@
-// const contacts = require('../models/contacts');
-
 const Contact = require('../models/contact');
 
 const { HttpError, ctrlWrapper } = require('../helpers');
@@ -36,7 +34,7 @@ const removeContact = async (req, res, next) => {
 
 const updateContact = async (req, res, next) => {
   const { id } = req.params;
-  const result = await Contact.findByIdAndUpdate(id, req.body);
+  const result = await Contact.findByIdAndUpdate(id, req.body, { new: true });
   if (!result) {
     throw HttpError(404, 'Not found');
   }
@@ -48,8 +46,8 @@ const updateStatusContact = async (req, res, next) => {
   if (!req.body) {
     throw HttpError(400, 'missing field favorite');
   }
-  const result = await Contact.findByIdAndUpdate(id, req.body);
-  
+  const result = await Contact.findByIdAndUpdate(id, req.body, { new: true });
+
   if (!result) {
     throw HttpError(404, 'Not found');
   }
