@@ -16,9 +16,7 @@ const updateFavoriteSchema = Joi.object({
   favorite: Joi.boolean().required(),
 });
 
-const authSchema = Joi.object({
-  email: Joi.string().pattern(emailRegexp).required(),
-  password: Joi.string().min(6).required(),
-});
-
-module.exports = { addSchema, updateFavoriteSchema, authSchema };
+module.exports = {
+  addSchema,
+  updateFavoriteSchema,
+};
