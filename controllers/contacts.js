@@ -2,12 +2,13 @@ const Contact = require('../models/contact');
 
 const { HttpError, ctrlWrapper } = require('../helpers');
 
-const listContacts = async (req, res, next) => {
-  const result = await Contact.find();
+const listContacts = async (req, res) => {
+  const { _id: owner } = req.user;
+  const result = await Contact.find({ owner });
   res.json(result);
 };
 
-const getContactById = async (req, res, next) => {
+const getContactById = async (req, res) => {
   const { id } = req.params;
   const result = await Contact.findById(id);
   if (!result) {
@@ -16,12 +17,13 @@ const getContactById = async (req, res, next) => {
   res.json(result);
 };
 
-const addContact = async (req, res, next) => {
-  const result = await Contact.create(req.body);
+const addContact = async (req, res) => {
+  const { _id: owner } = req.user;
+  const result = await Contact.create({ ...req.body, owner });
   res.status(201).json(result);
 };
 
-const removeContact = async (req, res, next) => {
+const removeContact = async (req, res) => {
   const { id } = req.params;
   const result = await Contact.findByIdAndRemove(id);
   if (!result) {
@@ -32,7 +34,7 @@ const removeContact = async (req, res, next) => {
   });
 };
 
-const updateContact = async (req, res, next) => {
+const updateContact = async (req, res) => {
   const { id } = req.params;
   const result = await Contact.findByIdAndUpdate(id, req.body, { new: true });
   if (!result) {
@@ -41,7 +43,7 @@ const updateContact = async (req, res, next) => {
   res.json(result);
 };
 
-const updateStatusContact = async (req, res, next) => {
+const updateStatusContact = async (req, res) => {
   const { id } = req.params;
   if (!req.body) {
     throw HttpError(400, 'missing field favorite');
