@@ -19,19 +19,21 @@ const register = async (req, res) => {
 
   const verificationToken = nanoid();
 
+  const verifyEmail = {
+    to: email,
+    html: `<a target="_blank" href="${BASE_URL}/api/users/verify/${verificationToken}">Click verify email</a>`,
+  };
+
+  await sendEmail(verifyEmail).catch(error => {
+    throw HttpError(error.status, error.message);
+  });
+
   const newUser = await User.create({
     ...req.body,
     password: hashedPassword,
     avatarURL,
     verificationToken,
   });
-
-  const verifyEmail = {
-    to: email,
-    html: `<a target="_blank" href="${BASE_URL}/api/users/verify/${verificationToken}">Click verify email</a>`,
-  };
-
-  await sendEmail(verifyEmail);
 
   res.status(201).json({
     user: {
